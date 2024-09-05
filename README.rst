@@ -101,7 +101,7 @@ and no exception raises
     g.discard_edge(1,4)
 
     assert set(g.all_vertices()) == {1,2,4}
-    assert set(g.all_edges())    == {(1,4)}
+    assert set(g.all_edges())    == set()
 
     assert g.num_edges() == 0
     g.discard_edge(1,4)
