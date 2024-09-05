@@ -65,9 +65,9 @@ If the edge is present in the edge set, the method does nothing.
 
     assert set(g.adj_vertices(2)) = set() # isolated vertex
 
-    assert g.num_vertices() == 3
+    assert g.num_vertices() == 4
     g.add_vertex(1) # vertex 1 already present and nothing done
-    assert g.num_vertices() == 3
+    assert g.num_vertices() == 4
 
 Similary, ``add_vertex(u)`` adds vertex ``u`` to the vertex set.
 If it is present in the vertex set, nothing is done.
