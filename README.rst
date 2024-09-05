@@ -63,7 +63,7 @@ If the edge is present in the edge set, the method does nothing.
     assert set(g.all_vertices()) == {1,2,3,4}
     assert set(g.all_edges())    == {(1,4),(3,4)}
 
-    assert set(g.adj_vertices(2)) = set() # isolated vertex
+    assert set(g.adj_vertices(2)) == set() # isolated vertex
 
     assert g.num_vertices() == 4
     g.add_vertex(1) # vertex 1 already present and nothing done
