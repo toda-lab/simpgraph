@@ -2,6 +2,8 @@ import os
 from typing import Set, Tuple, Union, Optional
 from os import PathLike
 
+import graphviz
+
 class SimpGraph:
     """Simple and minimal implementation of unordered graph"""
 
@@ -17,6 +19,26 @@ class SimpGraph:
         """Dictionary that maps each vertex to its label"""
         self._edge_label_dict = {}
         """Dictionary that maps each edge to its label"""
+
+    def clear(self) -> None:
+        """Clears all object variables to make it an empty graph."""
+        self._vertex_set.clear()
+        self._edge_set.clear()
+        self._adj_dict.clear()
+        self._vertex_label_dict.clear()
+        self._edge_label_dict.clear()
+
+    def __eq__(self, g):
+        """Determines equality as graphs without labels.
+
+        Args:
+            g: A graph
+
+        Returns:
+            True if the vertex set and the edge set are equal with each other.
+        """
+        return self._vertex_set == set(g.all_vertices())\
+            and self._edge_set == set(g.all_edges())
 
     def add_vertex(self, u: int, label: Optional[str] = None) -> None:
         """Adds a vertex to the vertex set.
@@ -36,6 +58,8 @@ class SimpGraph:
         if u <= 0:
             raise ValueError("vertex index must be positive.")
         if u in self._vertex_set:
+            if label is not None:
+                self._vertex_label_dict[u] = label
             return
         assert(u not in self._adj_dict)
         self._adj_dict[u] = set()
@@ -71,6 +95,8 @@ class SimpGraph:
         if u > v:
             u,v = v,u
         if (u,v) in self._edge_set:
+            if label is not None:
+                self._edge_label_dict[(u,v)] = label
             return # already added
         self.add_vertex(u)
         self.add_vertex(v)
@@ -92,7 +118,10 @@ class SimpGraph:
         """
         if u not in self._vertex_set:
             return # not present
-        for v in self._adj_dict[u]:
+        # NOTE: Do not use self._adj_dict[u] in the for statement
+        # because self.discard_edge() changes self._adj_dict.
+        neighbors = tuple(self._adj_dict[u])
+        for v in neighbors:
             self.discard_edge(u,v)
         self._vertex_set.remove(u)
         self._vertex_label_dict.pop(u, None)
@@ -151,6 +180,14 @@ class SimpGraph:
             The tuple of all vertices
         """
         return tuple(self._vertex_set)
+
+    def all_edges(self) -> Tuple[Tuple[int]]:
+        """Gets the tuple of all edges.
+
+        Returns:
+            The tuple of all edges
+        """
+        return tuple(self._edge_set)
 
     def adj_vertices(self, u: int) -> Tuple[int]:
         """Gets the tuple of adjacent vertices.
@@ -235,8 +272,12 @@ class SimpGraph:
             if format == "DIMACS":
                 for line in f.read().split("\n"):
                     res = line.strip().split(" ")
+                    if len(res) > 0 and res[0] == "n":
+                        if len(res) < 2:
+                            raise Exception("Unexpected format: "+line)
+                        g.add_vertex(int(res[1]))
                     if len(res) > 0 and res[0] == "e":
-                        if len(res) != 3:
+                        if len(res) < 3:
                             raise Exception("Unexpected format: "+line)
                         g.add_edge(int(res[1]),int(res[2]))
             else:
@@ -257,16 +298,20 @@ class SimpGraph:
         The arguments are the same as those of render() of Graphviz:
         https://graphviz.readthedocs.io/en/stable/manual.html .
         """
-        dot = graphviz.Digraph()
-        for u in self._vertex_set():
+        dot = graphviz.Graph()
+        for u in self._vertex_set:
             label = self.vertex_label(u)
-            if label is not None:
+            if label is None:
                 label = str(u)
-            dot.node(u, label=label)
-        for e in self._edge_set():
-            u = e[0]
-            v = e[1]
-            dot.edge(u, v, label=self.edge_label(u,v))
+            dot.node(str(u), label=label)
+        for e in self._edge_set:
+            label_u = self.vertex_label(e[0])
+            label_v = self.vertex_label(e[1])
+            if label_u is None:
+                label_u = str(e[0])
+            if label_v is None:
+                label_v = str(e[1])
+            dot.edge(label_u, label_v, label=self.edge_label(e[0],e[1]))
         dot.render(filename=filename, directory=directory, view=view,\
             cleanup=cleanup, format=format, renderer=renderer,\
             formatter=formatter, neato_no_op=neato_no_op, quiet=quiet,\
