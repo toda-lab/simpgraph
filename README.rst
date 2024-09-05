@@ -185,8 +185,8 @@ See `User Guide of Graphviz
     #   4    3
     assert gg.vertex_label(2) is None
     assert gg.vertex_label(3) is None
-    assert gg.edge_label(1,4)) is None
-    assert gg.edge_label(2,3)) is None
+    assert gg.edge_label(1,4) is None
+    assert gg.edge_label(2,3) is None
 
 As above, a graph can be wrote to an external file in DIMACS graph format,
 but vertex labels and edge labels are not recorded.
