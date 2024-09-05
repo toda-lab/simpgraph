@@ -3,7 +3,7 @@ from typing import Set, Tuple, Union, Optional
 from os import PathLike
 
 class SimpGraph:
-    """Simple implementation of unordered graph"""
+    """Simple and minimal implementation of unordered graph"""
 
     def __init__(self):
         """Creates an empty graph."""
