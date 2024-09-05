@@ -311,7 +311,7 @@ class SimpGraph:
                 label_u = str(e[0])
             if label_v is None:
                 label_v = str(e[1])
-            dot.edge(label_u, label_v, label=self.edge_label(e[0],e[1]))
+            dot.edge(str(e[0]), str(e[1]), label=self.edge_label(e[0],e[1]))
         dot.render(filename=filename, directory=directory, view=view,\
             cleanup=cleanup, format=format, renderer=renderer,\
             formatter=formatter, neato_no_op=neato_no_op, quiet=quiet,\

@@ -3,7 +3,7 @@ graph {
 	2 [label=B]
 	3 [label=C]
 	4 [label=4]
-	B -- C
-	1 -- B [label=D]
+	2 -- 3
+	1 -- 2 [label=D]
 	1 -- 4 [label=A]
 }

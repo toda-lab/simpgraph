@@ -143,10 +143,10 @@ raises.
     assert g.edge_label(1,4) == "A"
 
     #   before       after
-    #   1    2:B     1----2:B
+    #   1    2:B     1    2:B
     #   |A   |    => |A   |D
     #   4    3:C     4    3:C
-    g.add_edge(1,2, label="D")
+    g.add_edge(2,3, label="D") # label updated
 
 Optional labels can be assigned to vertices and edges,
 and the graph can be rendered as follows.
@@ -163,7 +163,7 @@ See `User Guide of Graphviz
 
 .. code:: python
 
-    #   1----2:B
+    #   1    2:B
     #   |A   |D
     #   4    3:C
     g.add_edge(1,2, label="D")
@@ -180,7 +180,7 @@ See `User Guide of Graphviz
     assert(g == gg) # the vertex set and the edge set are determined to be equal.
 
     # However, no label is preserved in the constructed graph.
-    #   1----2
+    #   1    2
     #   |    |
     #   4    3
     assert gg.vertex_label(2) is None
